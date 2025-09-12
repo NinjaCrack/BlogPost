@@ -22,7 +22,6 @@ class UsersController < ApplicationController
 
         @followers = @user.followers # Fetch the list of followers for the user
         @following = @user.following # Fetch the list of users that the user is following
-        
     end
 
     # Edit user profile

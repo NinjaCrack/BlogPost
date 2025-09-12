@@ -3,7 +3,7 @@ class PostsController < ApplicationController
 
     def index
         following_ids = current_user.following_ids
-        @posts = Post.where(user_id: [current_user.id] + following_ids)
+        @posts = Post.where(user_id: [ current_user.id ] + following_ids)
                 .includes(:user, :likes, :comments)
                 .order(created_at: :desc)
     end
@@ -18,7 +18,6 @@ class PostsController < ApplicationController
         @post = Post.find(params[:id]) # Find the post by ID from the URL parameters
         @comments = @post.comments.includes(:user).order(created_at: :desc) # Fetch comments for the post, including associated users, ordered by creation date
         @likes = @post.likes.includes(:user).order(created_at: :desc) # Fetch likes for the post, including associated users, ordered by creation date
-
     end
 
 
