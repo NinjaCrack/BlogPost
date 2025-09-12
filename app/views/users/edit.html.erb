@@ -1,0 +1,28 @@
+<h1>Edit Profile</h1>
+
+<%= form_with model: @user, local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :username %>
+    <%= f.text_field :username, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :bio %>
+    <%= f.text_area :bio, rows: 3, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :profile_picture %>
+    <%= f.file_field :profile_picture, class: "form-control" %>
+    <% if @user.profile_picture.attached? %>
+      <%= image_tag @user.profile_picture.variant(resize_to_limit: [150,150]) %>
+    <% end %>
+  </div>
+
+  <%= f.submit "Update Profile", class: "btn btn-primary mt-3" %>
+<% end %>

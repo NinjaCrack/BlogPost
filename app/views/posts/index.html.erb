@@ -1,0 +1,48 @@
+<h1>Newsfeed</h1>
+
+<% @posts.each do |post| %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">
+        <%= link_to post.user.username, user_path(post.user) %>
+      </h5>
+      <p class="card-text"><%= post.caption %></p>
+
+      <% if post.image.attached? %>
+        <%= image_tag post.image, class: "img-fluid" %>
+      <% end %>
+    
+
+   <% if post.likes.exists?(user: current_user) %>
+    <%= button_to "❤️ Unlike", post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: "btn btn-link p-0" %>
+    <% else %>
+    <%= button_to "♡ Like", post_likes_path(post), method: :post, class: "btn btn-link p-0" %>
+    <% end %>
+
+
+    <span><%= post.likes.count %> likes</span>
+        <br>
+    <small class="text-muted"><%= time_ago_in_words(post.created_at) %> ago</small>
+    
+    </div>
+    <h5>Comments</h5>
+    <%= form_with(model: [post, Comment.new], local: true) do |f| %>
+    <div class="form-group">
+        <%= f.text_area :body, rows: 2, class: "form-control", placeholder: "Add a comment..." %>
+    </div>
+    <%= f.submit "Comment", class: "btn btn-primary mt-1" %>
+    <% end %>
+
+    <ul class="list-unstyled mt-3">
+    <% post.comments.each do |comment| %>
+        <li class="mb-2">
+        <strong><%= comment.user.username %>:</strong> <%= comment.body %>
+        <% if comment.user == current_user || post.user == current_user %>
+            <%= button_to "Delete", post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-link text-danger p-0" %>
+        <% end %>
+        </li>
+    <% end %>
+    </ul>
+
+  </div>
+<% end %>

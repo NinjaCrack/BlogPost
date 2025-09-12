@@ -1,0 +1,47 @@
+
+
+<div>
+    <% if @user.profile_picture.attached? %>
+    <%= image_tag @user.profile_picture, width: 150, height: 150, class: "rounded-circle" %>
+    <% else %>
+    <p>No profile picture uploaded.</p>
+    <% end %>
+    <h1><%= @user.name %></h1>
+</div>
+<p><%= link_to "Edit Profile", edit_user_path(@user) if current_user == @user %></p>
+<p><strong>Username:</strong> <%= @user.username %></p>
+
+<p><strong>Bio:</strong> <%= @user.bio %></p>
+<p><strong>Gender:</strong> <%= @user.gender %></p>
+<p><strong>Email:</strong> <%= @user.email %></p>
+
+
+<% if current_user != @user %>
+  <% if current_user.following?(@user) %>
+    <%= button_to "Unfollow", unfollow_user_path(@user), method: :delete %>
+  <% else %>
+    <%= button_to "Follow", follow_user_path(@user), method: :post %>
+  <% end %>
+<% end %>
+
+<p>Followers: <%= @user.followers.count %></p>
+<p>Following: <%= @user.following.count %></p>
+
+<p><strong>Followers:</strong> <%= @user.followers.count %></p>
+<p><%= link_to "View Followers", followers_user_path(@user) %></p>
+<p><strong>Following:</strong> <%= @user.following.count %></p>
+<p><%= link_to "View Following", following_user_path(@user) %></p>
+
+<hr>
+
+<h2>Posts</h2>
+<% @posts.each do |post| %>
+  <div class="post">
+    <% if post.image.attached? %>
+      <%= image_tag post.image, width: 300 %>
+    <% end %>
+    <p><%= post.caption %></p>
+    <small><%= time_ago_in_words(post.created_at) %> ago</small>
+  </div>
+  <hr>
+<% end %>

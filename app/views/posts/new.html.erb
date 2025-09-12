@@ -1,0 +1,14 @@
+<h1>New Post</h1>
+
+<hr>
+
+<%= form_with model: @post, local: true do |f| %>
+  <%= f.label :caption %>
+  <%= f.text_area :caption %><br>
+
+  <%= f.label :image %>
+  <%= f.file_field :image %><br>
+
+  <%= f.submit "Create Post" %>
+<% end %>
+

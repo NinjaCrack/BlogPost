@@ -1,0 +1,13 @@
+<h1>Log In</h1>
+
+<%= form_with url: login_path do %>
+  <%= label_tag :email %>
+  <%= email_field_tag :email %><br>
+
+  <%= label_tag :password %>
+  <%= password_field_tag :password %><br>
+
+  <%= submit_tag "Log In" %>
+<% end %>
+
+<p>Don’t have an account? <%= link_to "Sign up", new_user_path %></p>
