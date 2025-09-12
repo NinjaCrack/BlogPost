@@ -1,48 +1,75 @@
-<h1>Newsfeed</h1>
-
-<% @posts.each do |post| %>
-  <div class="card mb-3">
-    <div class="card-body">
-      <h5 class="card-title">
-        <%= link_to post.user.username, user_path(post.user) %>
-      </h5>
-      <p class="card-text"><%= post.caption %></p>
-
-      <% if post.image.attached? %>
-        <%= image_tag post.image, class: "img-fluid" %>
-      <% end %>
-    
-
-   <% if post.likes.exists?(user: current_user) %>
-    <%= button_to "❤️ Unlike", post_like_path(post, post.likes.find_by(user: current_user)), method: :delete, class: "btn btn-link p-0" %>
-    <% else %>
-    <%= button_to "♡ Like", post_likes_path(post), method: :post, class: "btn btn-link p-0" %>
-    <% end %>
-
-
-    <span><%= post.likes.count %> likes</span>
-        <br>
-    <small class="text-muted"><%= time_ago_in_words(post.created_at) %> ago</small>
-    
-    </div>
-    <h5>Comments</h5>
-    <%= form_with(model: [post, Comment.new], local: true) do |f| %>
-    <div class="form-group">
-        <%= f.text_area :body, rows: 2, class: "form-control", placeholder: "Add a comment..." %>
-    </div>
-    <%= f.submit "Comment", class: "btn btn-primary mt-1" %>
-    <% end %>
-
-    <ul class="list-unstyled mt-3">
-    <% post.comments.each do |comment| %>
-        <li class="mb-2">
-        <strong><%= comment.user.username %>:</strong> <%= comment.body %>
-        <% if comment.user == current_user || post.user == current_user %>
-            <%= button_to "Delete", post_comment_path(post, comment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-link text-danger p-0" %>
+<div class="container mt-4" style="max-width: 600px;">
+  <% @posts.each do |post| %>
+    <div class="card border-0 mb-5">
+      <!-- Post header -->
+      <div class="d-flex align-items-center p-2">
+        <% if post.user.profile_picture.attached? %>
+          <%= image_tag post.user.profile_picture, class: "rounded-circle me-2", style: "width: 40px; height: 40px; object-fit: cover;" %>
+        <% else %>
+          <div class="rounded-circle bg-secondary me-2 d-flex align-items-center justify-content-center text-white"
+               style="width: 40px; height: 40px; font-weight: bold;">
+            <%= post.user.username.first.upcase %>
+          </div>
         <% end %>
-        </li>
-    <% end %>
-    </ul>
+        <strong>
+          <%= link_to post.user.username, user_path(post.user), class: "text-dark text-decoration-none" %>
+        </strong>
+      </div>
 
-  </div>
-<% end %>
+      <!-- Post image -->
+      <% if post.image.attached? %>
+        <%= image_tag post.image, class: "w-100", style: "max-height: 600px; object-fit: cover;" %>
+      <% end %>
+
+      <div class="p-3">
+        <!-- Like buttons (icon style instead of Bootstrap buttons) -->
+        <div class="d-flex align-items-center mb-2">
+          <% if post.likes.exists?(user: current_user) %>
+            <%= button_to "❤️", post_like_path(post, post.likes.find_by(user: current_user)),
+                method: :delete, class: "btn btn-link p-0 me-3 fs-4 text-danger", style: "text-decoration: none;" %>
+          <% else %>
+            <%= button_to "♡", post_likes_path(post),
+                method: :post, class: "btn btn-link p-0 me-3 fs-4 text-dark", style: "text-decoration: none;" %>
+          <% end %>
+        </div>
+
+        <!-- Likes count -->
+        <p class="mb-1 fw-semibold"><%= post.likes.count %> likes</p>
+
+        <!-- Caption -->
+        <% if post.caption.present? %>
+          <p class="mb-1">
+            <strong><%= post.user.username %></strong> <%= post.caption %>
+          </p>
+        <% end %>
+
+        <!-- Comments -->
+        <ul class="list-unstyled mb-2">
+          <% post.comments.each do |comment| %>
+            <li>
+              <strong><%= comment.user.username %></strong> <%= comment.body %>
+              <% if comment.user == current_user || post.user == current_user %>
+                <%= button_to "Delete", post_comment_path(post, comment),
+                    method: :delete, data: { confirm: "Are you sure?" },
+                    class: "btn btn-link text-danger p-0 ms-2 small" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+
+        <!-- Timestamp -->
+        <small class="text-muted d-block mb-2" style="font-size: 0.8rem;">
+          <%= time_ago_in_words(post.created_at) %> ago
+        </small>
+
+        <!-- Comment form -->
+        <%= form_with(model: [post, Comment.new], local: true) do |f| %>
+          <div class="d-flex align-items-center">
+            <%= f.text_field :body, class: "form-control border-0 p-0", placeholder: "Add a comment...", style: "box-shadow: none;" %>
+            <%= f.submit "Post", class: "btn btn-link text-primary fw-semibold small" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

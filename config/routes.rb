@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # for logout
   # delete '/logout', to: 'sessions#destroy'
 
-  resources :posts, only: [ :new, :create, :index ] do # Nested routes for comments
+  resources :posts, only: [ :new, :create, :index, :show ] do # Nested routes for comments
     resources :comments, only: [ :create, :destroy ] # Nested routes for comments under posts
     resources :likes, only: [ :create, :destroy ] # Nested routes for likes under posts
     post "toggle_like", to: "posts#toggle" # Custom route for toggling likes on a post

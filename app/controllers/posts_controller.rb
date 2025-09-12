@@ -2,15 +2,25 @@ class PostsController < ApplicationController
     before_action :require_login # Ensure user is logged in before accessing any action
 
     def index
-        # @posts = Post.includes(:user).order(created_at: :desc) # Fetch all posts with associated users, ordered by creation date
         following_ids = current_user.following_ids
-        @posts = Post.where(user_id: [ current_user.id ] + following_ids).order(created_at: :desc).includes(:user) # Fetch posts from the current user and users they follow, ordered by creation date
+        @posts = Post.where(user_id: [current_user.id] + following_ids)
+                .includes(:user, :likes, :comments)
+                .order(created_at: :desc)
     end
+
 
     def new # Render the form for creating a new post
         @post = Post.new # Initialize a new Post object for the form
         @posts = Post.includes(:user, :likes).order(created_at: :desc)
     end
+
+    def show
+        @post = Post.find(params[:id]) # Find the post by ID from the URL parameters
+        @comments = @post.comments.includes(:user).order(created_at: :desc) # Fetch comments for the post, including associated users, ordered by creation date
+        @likes = @post.likes.includes(:user).order(created_at: :desc) # Fetch likes for the post, including associated users, ordered by creation date
+
+    end
+
 
     def create # Handle form submission to create a new post
         @post = current_user.posts.build(post_params) # Create a new Post associated with the current user using strong parameters

@@ -1,14 +1,24 @@
-<h1>New Post</h1>
+<div class="d-flex justify-content-center mt-5">
+  <div class="card p-3" style="max-width: 500px; width: 100%; border: 1px solid #dbdbdb; border-radius: 8px;">
+    <!-- Header -->
+    <h2 class="text-center fw-bold mb-3" style="font-family: 'Billabong', cursive; font-size: 2.5rem;">InstaBlog</h2>
 
-<hr>
+    <!-- New Post Form -->
+    <%= form_with model: @post, local: true, html: { class: "text-start" } do |f| %>
+      <!-- Caption -->
+      <div class="mb-3">
+        <%= f.text_area :caption, rows: 3, class: "form-control form-control-sm", placeholder: "Write a caption..." %>
+      </div>
 
-<%= form_with model: @post, local: true do |f| %>
-  <%= f.label :caption %>
-  <%= f.text_area :caption %><br>
+      <!-- Image Upload -->
+      <div class="mb-3">
+        <%= f.file_field :image, class: "form-control form-control-sm" %>
+      </div>
 
-  <%= f.label :image %>
-  <%= f.file_field :image %><br>
-
-  <%= f.submit "Create Post" %>
-<% end %>
-
+      <!-- Submit -->
+      <div class="d-grid">
+        <%= f.submit "Share", class: "btn btn-primary fw-semibold", style: "background-color: #0095f6; border: none;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

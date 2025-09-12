@@ -8,3 +8,15 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+/*
+ *= require bootstrap.min
+ *= require_self
+ */
+ // app/assets/stylesheets/application.scss
+
+// Import Bootstrap first
+@import "bootstrap.min";
+
+// Then your custom overrides
+@import "custom";
+

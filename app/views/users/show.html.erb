@@ -1,47 +1,148 @@
+<div class="container mt-4">
+  <!-- Profile Header -->
+  <div class="d-flex align-items-center mb-4">
+    <!-- Profile Picture -->
+    <div class="me-4 text-center">
+      <% if @user.profile_picture.attached? %>
+        <%= image_tag @user.profile_picture, class: "rounded-circle border", style: "width: 150px; height: 150px; object-fit: cover;" %>
+      <% else %>
+        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" 
+             style="width: 150px; height: 150px; font-size: 2rem;">
+          <%= @user.username.first.upcase %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- User Info -->
+    <div>
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <h2 class="mb-0"><%= @user.username %></h2>
+        <% if current_user == @user %>
+          <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-outline-secondary btn-sm" %>
+        <% else %>
+          <% if current_user.following?(@user) %>
+            <%= button_to "Unfollow", unfollow_user_path(@user), method: :delete, class: "btn btn-outline-primary btn-sm" %>
+          <% else %>
+            <%= button_to "Follow", follow_user_path(@user), method: :post, class: "btn btn-primary btn-sm" %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <!-- Stats -->
+
+    <div class="d-flex gap-4 mb-3">
+        <span><strong><%= @posts.count %></strong> posts</span>
+
+        <button type="button" class="btn btn-link p-0 fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#followersModal">
+            <strong><%= @followers.count %></strong> followers
+        </button>
+
+        <button type="button" class="btn btn-link p-0 fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#followingModal">
+            <strong><%= @following.count %></strong> following
+        </button>
+    </div>
 
 
-<div>
-    <% if @user.profile_picture.attached? %>
-    <%= image_tag @user.profile_picture, width: 150, height: 150, class: "rounded-circle" %>
-    <% else %>
-    <p>No profile picture uploaded.</p>
-    <% end %>
-    <h1><%= @user.name %></h1>
-</div>
-<p><%= link_to "Edit Profile", edit_user_path(@user) if current_user == @user %></p>
-<p><strong>Username:</strong> <%= @user.username %></p>
-
-<p><strong>Bio:</strong> <%= @user.bio %></p>
-<p><strong>Gender:</strong> <%= @user.gender %></p>
-<p><strong>Email:</strong> <%= @user.email %></p>
-
-
-<% if current_user != @user %>
-  <% if current_user.following?(@user) %>
-    <%= button_to "Unfollow", unfollow_user_path(@user), method: :delete %>
-  <% else %>
-    <%= button_to "Follow", follow_user_path(@user), method: :post %>
-  <% end %>
-<% end %>
-
-<p>Followers: <%= @user.followers.count %></p>
-<p>Following: <%= @user.following.count %></p>
-
-<p><strong>Followers:</strong> <%= @user.followers.count %></p>
-<p><%= link_to "View Followers", followers_user_path(@user) %></p>
-<p><strong>Following:</strong> <%= @user.following.count %></p>
-<p><%= link_to "View Following", following_user_path(@user) %></p>
-
-<hr>
-
-<h2>Posts</h2>
-<% @posts.each do |post| %>
-  <div class="post">
-    <% if post.image.attached? %>
-      <%= image_tag post.image, width: 300 %>
-    <% end %>
-    <p><%= post.caption %></p>
-    <small><%= time_ago_in_words(post.created_at) %> ago</small>
+      <!-- Name and Bio -->
+      <div>
+        <strong><%= @user.name %></strong>
+        <% if @user.bio.present? %>
+          <p class="mb-0"><%= @user.bio %></p>
+        <% end %>
+        <% if @user.gender.present? %>
+          <small class="text-muted"><%= @user.gender %></small>
+        <% end %>
+      </div>
+    </div>
   </div>
+
   <hr>
-<% end %>
+
+  <!-- User Posts Grid -->
+<h2 class="mt-4 mb-3">Posts</h2>
+
+<div class="row g-2">
+  <% @posts.each do |post| %>
+    <div class="col-4">
+      <%= link_to post_path(post), class: "d-block position-relative" do %>
+        <% if post.image.attached? %>
+          <%= image_tag post.image, class: "img-fluid", style: "width: 100%; height: 200px; object-fit: cover;" %>
+        <% else %>
+          <div class="bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
+            No Image
+          </div>
+        <% end %>
+        <!-- Hover overlay for likes/comments -->
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center overlay" style="background-color: rgba(0,0,0,0.5); color: white; opacity: 0; transition: opacity 0.2s;">
+          <div class="d-flex gap-3">
+            <span>❤️ <%= post.likes.count %></span>
+            <span>💬 <%= post.comments.count %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+
+<!-- Followers Modal -->
+<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followersModalLabel"><%= @user.username %>’s Followers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-unstyled mb-0">
+          <% @followers.each do |follower| %>
+            <li class="d-flex align-items-center mb-2">
+              <% if follower.profile_picture.attached? %>
+                <%= image_tag follower.profile_picture, class: "rounded-circle me-2", width: 40, height: 40, style: "object-fit: cover;" %>
+              <% else %>
+                <div class="rounded-circle bg-secondary text-white me-2 d-flex align-items-center justify-content-center" 
+                     style="width: 40px; height: 40px;">
+                  <%= follower.username.first.upcase %>
+                </div>
+              <% end %>
+              <%= link_to follower.username, user_path(follower), class: "text-decoration-none text-dark fw-semibold" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Following Modal -->
+<div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followingModalLabel"><%= @user.username %> is Following</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-unstyled mb-0">
+          <% @following.each do |followed| %>
+            <li class="d-flex align-items-center mb-2">
+              <% if followed.profile_picture.attached? %>
+                <%= image_tag followed.profile_picture, class: "rounded-circle me-2", width: 40, height: 40, style: "object-fit: cover;" %>
+              <% else %>
+                <div class="rounded-circle bg-secondary text-white me-2 d-flex align-items-center justify-content-center" 
+                     style="width: 40px; height: 40px;">
+                  <%= followed.username.first.upcase %>
+                </div>
+              <% end %>
+              <%= link_to followed.username, user_path(followed), class: "text-decoration-none text-dark fw-semibold" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

@@ -19,6 +19,10 @@ class UsersController < ApplicationController
     def show # Display a user's profile
         @user = User.find(params[:id]) # Find the user by ID from the URL parameters
         @posts = @user.posts.order(created_at: :desc) # Fetch the user's posts, ordered by creation date
+
+        @followers = @user.followers # Fetch the list of followers for the user
+        @following = @user.following # Fetch the list of users that the user is following
+        
     end
 
     # Edit user profile

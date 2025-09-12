@@ -11,6 +11,6 @@ class Post < ApplicationRecord
 
 
   # validations
-  validates :caption, presence: true, length: { maximum: 300 } # Caption should be present and not exceed 300 characters
+  validates :caption, presence: true, length: { minimum: 3 } # Caption should be present and not exceed 300 characters
   validates :image, presence: true # Image should be attached
 end

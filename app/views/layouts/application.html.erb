@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Blog Post" %></title>
+    <title><%= content_for(:title) || "InstaBlog" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -23,17 +23,48 @@
   </head>
 
   <body>
-    <nav>
-    <% if logged_in? %>
-      Welcome, <%= current_user.username %> | <%= link_to "Newsfeed", posts_path %> | <%= link_to "My Profile", current_user %> |
-       <%= link_to "New Post", new_post_path %> | <%= link_to "Logout", logout_path, method: :delete, data: { turbo_method: :delete } %>
+
+<% if logged_in? %>
+<div class="d-flex">
+  <!-- Sidebar -->
+  <nav class="d-flex flex-column p-3 border-end position-fixed top-0 start-0" 
+       style="width: 250px; height: 100vh; overflow-y: auto;">
+    <!-- Logo -->
+    <h2 class="fw-bold mb-4">InstaBlog</h2>
+
+    
+      <ul class="nav nav-pills flex-column gap-3">
+        <li class="nav-item">
+          <%= link_to "Home", posts_path, class: "nav-link fw-bold text-dark" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "New Post", new_post_path, class: "nav-link fw-bold text-dark" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Profile", current_user, class: "nav-link fw-bold text-dark" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Logout", logout_path, method: :delete, data: { turbo_method: :delete }, class: "nav-link fw-bold text-dark" %>
+        </li>
+      </ul>
+  </nav>
     <% else %>
-      <%= link_to "Login", login_path %> |
-      <%= link_to "Sign Up", new_user_path %>
+    <nav class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom">
+    <!-- Logo -->
+    <h2 class="mb-0 fw-bold">InstaBlog</h2>
+    </nav>
     <% end %>
 
-  
-  </nav>
-    <%= yield %>
+
+<!-- Main content -->
+<main class="flex-grow-1 p-4" style="<%= logged_in? ? 'margin-left: 250px;' : '' %>">
+  <%= yield %>
+</main>
+
+</div>
+
+
+
+
   </body>
 </html>

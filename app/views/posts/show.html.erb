@@ -1,0 +1,53 @@
+<div class="card mb-3 border-0" style="max-width: 600px; margin: 0 auto;">
+  <!-- Back button -->
+  <div class="p-2">
+    <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">&larr; Back</a>
+  </div>
+
+  <!-- Post image -->
+  <% if @post.image.attached? %>
+    <%= image_tag @post.image, class: "img-fluid w-100", style: "object-fit: cover;" %>
+  <% end %>
+
+  <div class="card-body p-2">
+    <!-- Post header: user info -->
+    <div class="d-flex align-items-center mb-2">
+      <% if @post.user.profile_picture.attached? %>
+        <%= image_tag @post.user.profile_picture, class: "rounded-circle me-2", width: 32, height: 32 %>
+      <% else %>
+        <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px;">
+          <%= @post.user.username.first.upcase %>
+        </div>
+      <% end %>
+      <strong class="me-auto"><%= link_to @post.user.username, user_path(@post.user), class: "text-dark text-decoration-none" %></strong>
+    </div>
+
+    <!-- Caption -->
+    <p class="mb-1"><strong><%= @post.user.username %></strong> <%= @post.caption %></p>
+
+    <!-- Likes -->
+    <div class="mb-1" style="font-weight: 500;">
+      ❤️ <%= @post.likes.count %> likes
+    </div>
+
+    <!-- Comments -->
+    <ul class="list-unstyled mb-2">
+      <% @post.comments.each do |comment| %>
+        <li>
+          <strong><%= comment.user.username %>:</strong> <%= comment.body %>
+        </li>
+      <% end %>
+    </ul>
+
+    <!-- Add comment form -->
+    <%= form_with(model: [@post, Comment.new], local: true, html: { class: "d-flex gap-2" }) do |f| %>
+      <%= f.text_area :body, rows: 1, class: "form-control form-control-sm", placeholder: "Add a comment...", style: "resize: none;" %>
+      <%= f.submit "Post", class: "btn btn-sm btn-primary" %>
+    <% end %>
+
+    <!-- Timestamp -->
+    <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+      <%= time_ago_in_words(@post.created_at) %> ago
+    </small>
+  </div>
+</div>
