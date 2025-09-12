@@ -2,9 +2,9 @@ class PostsController < ApplicationController
     before_action :require_login # Ensure user is logged in before accessing any action
 
     def index
-        #@posts = Post.includes(:user).order(created_at: :desc) # Fetch all posts with associated users, ordered by creation date
+        # @posts = Post.includes(:user).order(created_at: :desc) # Fetch all posts with associated users, ordered by creation date
         following_ids = current_user.following_ids
-        @posts = Post.where(user_id: [current_user.id] + following_ids).order(created_at: :desc).includes(:user) # Fetch posts from the current user and users they follow, ordered by creation date
+        @posts = Post.where(user_id: [ current_user.id ] + following_ids).order(created_at: :desc).includes(:user) # Fetch posts from the current user and users they follow, ordered by creation date
     end
 
     def new # Render the form for creating a new post
@@ -21,7 +21,7 @@ class PostsController < ApplicationController
         end
     end
 
-    #newfeed action to show posts from followed users
+    # newfeed action to show posts from followed users
     # def newsfeed
     # end
 
@@ -29,5 +29,4 @@ class PostsController < ApplicationController
     def post_params # Strong parameters to prevent mass assignment vulnerabilities
         params.require(:post).permit(:caption, :image) # Permit only the specified attributes
     end
-
 end

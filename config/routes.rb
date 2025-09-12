@@ -1,22 +1,21 @@
 Rails.application.routes.draw do
-
   root "sessions#new"
 
   # resources :users, only: [:new, :create, :show, :edit, :update]
-  #resources :sessions, only: [:new, :create, :destroy]
-  get    '/login',  to: 'sessions#new',     as: 'login'
-  post   '/login',  to: 'sessions#create'
-  delete '/logout', to: 'sessions#destroy', as: 'logout'
-  #for logout
-  #delete '/logout', to: 'sessions#destroy'
+  # resources :sessions, only: [:new, :create, :destroy]
+  get    "/login",  to: "sessions#new",     as: "login"
+  post   "/login",  to: "sessions#create"
+  delete "/logout", to: "sessions#destroy", as: "logout"
+  # for logout
+  # delete '/logout', to: 'sessions#destroy'
 
-  resources :posts, only: [:new, :create, :index] do # Nested routes for comments
-    resources :comments, only: [:create, :destroy] # Nested routes for comments under posts
-    resources :likes, only: [:create, :destroy] # Nested routes for likes under posts
+  resources :posts, only: [ :new, :create, :index ] do # Nested routes for comments
+    resources :comments, only: [ :create, :destroy ] # Nested routes for comments under posts
+    resources :likes, only: [ :create, :destroy ] # Nested routes for likes under posts
     post "toggle_like", to: "posts#toggle" # Custom route for toggling likes on a post
   end
 
-  resources :users, only: [:new, :create, :show, :edit, :update] do # Nested routes for user profiles
+  resources :users, only: [ :new, :create, :show, :edit, :update ] do # Nested routes for user profiles
     member do # Routes for following and followers
       get :following, :followers # GET /users/:id/following and GET /users/:id/followers
       post :follow

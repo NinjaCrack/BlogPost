@@ -1,5 +1,4 @@
 class SessionsController < ApplicationController
-
     def new # Render the login form
         redirect_to posts_path if current_user # If the user is already logged in, redirect to posts index
     end

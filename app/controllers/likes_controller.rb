@@ -1,6 +1,6 @@
 class LikesController < ApplicationController
     before_action :require_login
-    before_action :set_post 
+    before_action :set_post
 
     def create
         @post = Post.find(params[:post_id])
@@ -28,5 +28,4 @@ class LikesController < ApplicationController
     def set_post
         @post = Post.find(params[:post_id])
     end
-
 end

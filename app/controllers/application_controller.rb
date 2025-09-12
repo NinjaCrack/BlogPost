@@ -15,5 +15,4 @@ class ApplicationController < ActionController::Base
   def require_login # Ensure that a user is logged in before accessing certain actions
     redirect_to login_path, alert: "You must be logged in to access this section" unless logged_in?
   end
-  
 end

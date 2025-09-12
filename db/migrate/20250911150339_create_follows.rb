@@ -9,6 +9,6 @@ class CreateFollows < ActiveRecord::Migration[8.0]
 
     add_index :follows, :follower_id # Add index for faster lookup
     add_index :follows, :followed_id # Add index for faster lookup
-    add_index :follows, [:follower_id, :followed_id], unique: true # Ensure a user can't follow the same user more than once
+    add_index :follows, [ :follower_id, :followed_id ], unique: true # Ensure a user can't follow the same user more than once
   end
 end

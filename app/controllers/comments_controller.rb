@@ -27,5 +27,4 @@ class CommentsController < ApplicationController
     def comment_params # Strong parameters to prevent mass assignment vulnerabilities
         params.require(:comment).permit(:body) # Permit only the specified attributes
     end
-    
 end

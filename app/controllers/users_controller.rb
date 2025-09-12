@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:show, :edit, :update] # Ensure user is set for show, edit, and update actions
-    before_action :require_login, only: [:edit, :update] # Ensure user is logged in before accessing edit or update actions
-    before_action :correct_user, only: [:edit, :update] # Ensure only the correct user can edit or update their profile
+    before_action :set_user, only: [ :show, :edit, :update ] # Ensure user is set for show, edit, and update actions
+    before_action :require_login, only: [ :edit, :update ] # Ensure user is logged in before accessing edit or update actions
+    before_action :correct_user, only: [ :edit, :update ] # Ensure only the correct user can edit or update their profile
     def new
         @user = User.new # Initialize a new User object for the form
     end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 
     # Edit user profile
     def edit
-        #@user is already set by set_user
+      # @user is already set by set_user
     end
 
     def update # Handle form submission to update a user's profile
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
 
 
-    #following and unfollowing actions
+    # following and unfollowing actions
     def follow
         user = User.find(params[:id]) # Find the user to follow by ID from the URL parameters
         current_user.follow(user) # Call the follow method on the current user
@@ -75,6 +75,4 @@ class UsersController < ApplicationController
     def correct_user # Ensure that only the correct user can edit or update their profile
         redirect_to root_path, alert: "You are not authorized to perform this action." unless @user == current_user
     end
-    
-    
 end
