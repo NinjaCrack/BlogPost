@@ -25,43 +25,57 @@
   <body>
 
 <% if logged_in? %>
-<div class="d-flex">
-  <!-- Sidebar -->
-  <nav class="d-flex flex-column p-3 border-end position-fixed top-0 start-0" 
-       style="width: 250px; height: 100vh; overflow-y: auto;">
+<div class="d-flex flex-column flex-md-row">
+  <!-- Sidebar (desktop only) -->
+  <nav class="d-none d-md-flex flex-column p-3 border-end bg-white position-fixed top-0 start-0" 
+       style="width: 250px; height: 100vh; overflow-y: auto; z-index:9999;">
     <!-- Logo -->
     <h2 class="fw-bold mb-4">InstaBlog</h2>
 
-    
-      <ul class="nav nav-pills flex-column gap-3">
-        <li class="nav-item">
-          <%= link_to "Home", posts_path, class: "nav-link fw-bold text-dark" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "New Post", new_post_path, class: "nav-link fw-bold text-dark" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Profile", current_user, class: "nav-link fw-bold text-dark" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Logout", logout_path, method: :delete, data: { turbo_method: :delete }, class: "nav-link fw-bold text-dark" %>
-        </li>
-      </ul>
+    <ul class="nav nav-pills flex-column gap-3">
+      <li class="nav-item"><%= link_to "Home", posts_path, class: "nav-link fw-bold text-dark" %></li>
+      <li class="nav-item"><%= link_to "New Post", new_post_path, class: "nav-link fw-bold text-dark" %></li>
+      <li class="nav-item"><%= link_to "Profile", current_user, class: "nav-link fw-bold text-dark" %></li>
+      <li class="nav-item"><%= link_to "Logout", logout_path, method: :delete, data: { turbo_method: :delete }, class: "nav-link fw-bold text-dark" %></li>
+    </ul>
   </nav>
-    <% else %>
-    <nav class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom">
-    <!-- Logo -->
-    <h2 class="mb-0 fw-bold">InstaBlog</h2>
-    </nav>
-    <% end %>
 
+  <!-- Mobile Top Nav -->
+  <nav class="d-md-none position-fixed top-0 start-0 end-0 border-bottom bg-white d-flex justify-content-between align-items-center px-3 py-2" 
+       style="z-index:9999;">
+    <h4 class="fw-bold mb-0">InstaBlog</h4>
+    <div class="d-flex gap-3">
+      <%= link_to "Home", posts_path, class: "fw-bold text-dark text-decoration-none small" %>
+      <%= link_to "New", new_post_path, class: "fw-bold text-dark text-decoration-none small" %>
+      <%= link_to "Profile", current_user, class: "fw-bold text-dark text-decoration-none small" %>
+      <%= link_to "Logout", logout_path, method: :delete, data: { turbo_method: :delete }, class: "fw-bold text-dark text-decoration-none small" %>
+    </div>
+  </nav>
 
-<!-- Main content -->
-<main class="flex-grow-1 p-4" style="<%= logged_in? ? 'margin-left: 250px;' : '' %>">
-  <%= yield %>
-</main>
-
+  <!-- Main content -->
+  <main class="flex-grow-1 px-0 px-md-3 main-content" style="<%= logged_in? ? 'margin-top:20px;' : '' %>">
+    <%= yield %>
+  </main>
 </div>
+
+<% else %>
+  <!-- Guest navbar -->
+  <nav class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom position-fixed top-0 start-0 end-0 bg-white" 
+       style="z-index:9999;">
+    <h2 class="mb-0 fw-bold">InstaBlog</h2>
+  </nav>
+  <main class="p-4 main-content" style="margin-top:60px;">
+    <%= yield %>
+  </main>
+<% end %>
+
+
+
+
+
+
+
+
 
 
 
