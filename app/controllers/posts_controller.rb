@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
     before_action :require_login # Ensure user is logged in before accessing any action
+    before_action :set_post, only: [:destroy] # Set the post for actions that need it
+    before_action :correct_user, only: [:destroy] # Ensure the user is authorized to perform the action
 
     def index
         following_ids = current_user.following_ids
@@ -30,12 +32,22 @@ class PostsController < ApplicationController
         end
     end
 
-    # newfeed action to show posts from followed users
-    # def newsfeed
-    # end
+    def destroy
+        @post.destroy # Delete the post from the database
+        redirect_to posts_path, notice: "Post deleted successfully!" # Redirect to the posts index with a success message
+    end
 
     private
     def post_params # Strong parameters to prevent mass assignment vulnerabilities
         params.require(:post).permit(:caption, :image) # Permit only the specified attributes
     end
+
+    def set_post
+        @post = Post.find(params[:id]) # Find the post by ID from the URL parameters
+    end
+
+    def correct_user
+        redirect_to posts_path, alert: "Not authorized to perform this action." unless @post.user == current_user # Redirect if the current user is not the owner of the post
+    end
+    
 end

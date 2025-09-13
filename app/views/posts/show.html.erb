@@ -1,8 +1,17 @@
-<div class="card mb-3 border-0" style="max-width: 600px; margin: 0 auto;">
+<div class="card mb-3 border-0 mt-4" style="max-width: 600px; margin: 0 auto;">
   <!-- Back button -->
-  <div class="p-2">
-    <a href="javascript:history.back()" class="btn btn-sm btn-outline-secondary">&larr; Back</a>
-  </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+  <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm">
+    &larr; Back
+  </a>
+
+  <% if @post.user == current_user %>
+    <%= button_to "Delete Post", post_path(@post),
+          method: :delete,
+          data: { confirm: "Are you sure you want to delete this post?" },
+          class: "btn btn-danger btn-sm" %>
+  <% end %>
+</div>
 
   <!-- Post image -->
   <% if @post.image.attached? %>
