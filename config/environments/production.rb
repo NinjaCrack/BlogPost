@@ -50,7 +50,9 @@ Rails.application.configure do
   config.cache_store = :solid_cache_store
 
   # Replace the default in-process and non-durable queuing backend for Active Job.
-  config.active_job.queue_adapter = :solid_queue
+  #config.active_job.queue_adapter = :solid_queue # Use Solid for production.
+  config.active_job.queue_adapter = :inline # Use inline for testing purpose. Change to :solid_queue for production.
+
   config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -87,4 +89,6 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+
 end
